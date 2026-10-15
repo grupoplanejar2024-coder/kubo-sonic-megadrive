@@ -178,37 +178,58 @@
 
     <div id="game-container"></div>
 
-    <script>
-        function startGame() {
-            const container = document.getElementById("game-container");
+   <script>
+    async function startGame() {
+        const card = document.getElementById("game-card");
+        const container = document.getElementById("game-container");
+        const status = document.getElementById("status");
+        const btn = document.getElementById("play-button");
 
-            document.getElementById("game-card").style.display = "none";
-            container.style.display = "block";
-            container.innerHTML = "";
+        const romUrl = new URL("sonic1.gen", location.href).href;
 
-            window.EJS_player = "#game-container";
-            window.EJS_core = "segaMD";
-            window.EJS_gameUrl = "https://raw.githubusercontent.com/grupoplanejar2024-coder/kubo-sonic-megadrive/main/sonic1.gen";
-            window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
-            window.EJS_gameName = "Sonic The Hedgehog";
-            window.EJS_language = "pt-BR";
-            window.EJS_startOnLoaded = true;
-
-            const oldLoader = document.getElementById("emulatorjs-loader");
-            if (oldLoader) oldLoader.remove();
-
-            const script = document.createElement("script");
-            script.id = "emulatorjs-loader";
-            script.src = window.EJS_pathtodata + "loader.js";
-            script.async = true;
-
-            script.onerror = function () {
-                alert("Erro ao carregar o EmulatorJS. Verifique a conexão.");
-            };
-
-            document.body.appendChild(script);
+        // 1) Testa se a ROM existe antes de abrir o emulador
+        btn.disabled = true;
+        status.textContent = "Verificando a ROM...";
+        try {
+            const r = await fetch(romUrl, { method: "HEAD" });
+            if (!r.ok) throw new Error("ROM não encontrada (HTTP " + r.status + ")");
+        } catch (e) {
+            status.textContent = "Erro: " + e.message +
+                ". Abra pelo GitHub Pages ou por um servidor local (não por file://).";
+            btn.disabled = false;
+            return;
         }
-    </script>
+
+        // 2) Só agora mostra o emulador
+        card.style.display = "none";
+        container.classList.add("active");
+        container.innerHTML = "";
+
+        window.EJS_player = "#game-container";
+        window.EJS_core = "segaMD";
+        window.EJS_gameUrl = romUrl;
+        window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+        window.EJS_gameName = "Sonic The Hedgehog";
+        window.EJS_language = "pt-BR";
+        window.EJS_startOnLoaded = true;
+        window.EJS_threads = false;
+        window.EJS_onGameStart = () => console.log("Jogo iniciado");
+
+        const old = document.getElementById("emulatorjs-loader");
+        if (old) old.remove();
+
+        const script = document.createElement("script");
+        script.id = "emulatorjs-loader";
+        script.src = window.EJS_pathtodata + "loader.js";
+        script.onerror = () => {
+            container.classList.remove("active");
+            card.style.display = "";
+            btn.disabled = false;
+            status.textContent = "Não foi possível carregar o EmulatorJS (CDN bloqueado ou sem internet).";
+        };
+        document.body.appendChild(script);
+    }
+</script>
 
 </body>
 </html>
