@@ -53,13 +53,14 @@
     <div id="game-container"></div>
 
     <script>
+       <script>
         function startGame() {
             document.getElementById('game-card').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
             
             window.EJS_player = '#game-container';
             window.EJS_core = 'segaMD'; // Núcleo de Mega Drive
-            window.EJS_gameUrl = 'sonic1.gen'; // Altere para o nome exato do seu arquivo de ROM se for diferente
+            window.EJS_gameUrl = 'https://raw.githubusercontent.com/grupoplanejar2024-coder/kubo-sonic-megadrive/main/sonic1.gen'; // Link Raw correto
             window.EJS_mouse = false;
             window.EJS_multitap = false;
             window.EJS_fullscreenOnLoad = true;
@@ -67,6 +68,8 @@
             let script = document.createElement('script');
             script.src = 'https://www.emulatorjs.com/stable/data.js';
             document.body.appendChild(script);
+        }
+    </script>
         }
     </script>
 </body>
