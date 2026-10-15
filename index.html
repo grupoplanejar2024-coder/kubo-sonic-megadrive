@@ -69,7 +69,8 @@
 
             // Cria e injeta o script do emulador de forma limpa
             let script = document.createElement('script');
-            script.src = 'https://www.emulatorjs.com/stable/data.js';
+            <!-- Insira esta linha antes do fechamento da tag </body> -->
+<script src="https://www.emulatorjs.com/stable/data.js"></script>
             script.async = true;
             document.body.appendChild(script);
         }
