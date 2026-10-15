@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sonic The Hedgehog - Mega Drive NFC</title>
     <style>
-        body { background: #121212; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .game-card { max-width: 500px; width: 100%; margin: 20px auto; background: #1e1e1e; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        /* Ajustado para 'contain' e fundo preto para exibir a capa inteira sem cortes */
+        body { background: #121212; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .game-card { max-width: 500px; width: 100%; margin: 20px auto; background: #1e1e1e; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5); z-index: 10; }
         .cover-container { width: 100%; height: 260px; background-image: url('sonic-cover.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #000; }
         .content { padding: 20px; }
         h1 { margin: 0 0 10px 0; font-size: 24px; color: #3388ff; }
@@ -17,8 +16,10 @@
         .details ul { padding-left: 20px; margin: 0; }
         .btn-play { display: block; width: 100%; padding: 12px; background: #1a4dcc; color: #fff; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; box-sizing: border-box; }
         .btn-play:hover { background: #123599; }
-        #game-container { display: none; width: 100%; height: 100vh; position: fixed; top: 0; left: 0; background: #000; z-index: 999; }
-        header { position: absolute; top: 15px; left: 20px; }
+        
+        /* Ajustado para garantir que o emulador cobre o ecrã inteiro quando ativado */
+        #game-container { display: none; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; background: #000; z-index: 999; }
+        header { position: absolute; top: 15px; left: 20px; z-index: 5; }
         .badge { background: #1a4dcc; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
     </style>
 </head>
@@ -53,23 +54,24 @@
     <div id="game-container"></div>
 
     <script>
-       <script>
         function startGame() {
+            // Oculta o cartão do jogo e exibe o contentor do emulador
             document.getElementById('game-card').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
             
+            // Configurações globais do EmulatorJS
             window.EJS_player = '#game-container';
-            window.EJS_core = 'segaMD'; // Núcleo de Mega Drive
-            window.EJS_gameUrl = 'https://raw.githubusercontent.com/grupoplanejar2024-coder/kubo-sonic-megadrive/main/sonic1.gen'; // Link Raw correto
+            window.EJS_core = 'segaMD';
+            window.EJS_gameUrl = 'https://raw.githubusercontent.com/grupoplanejar2024-coder/kubo-sonic-megadrive/main/sonic1.gen';
             window.EJS_mouse = false;
             window.EJS_multitap = false;
             window.EJS_fullscreenOnLoad = true;
 
+            // Cria e injeta o script do emulador de forma limpa
             let script = document.createElement('script');
             script.src = 'https://www.emulatorjs.com/stable/data.js';
+            script.async = true;
             document.body.appendChild(script);
-        }
-    </script>
         }
     </script>
 </body>
