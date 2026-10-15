@@ -207,46 +207,57 @@
     <script>
         let emulatorStarted = false;
 
-        function startGame() {
-            if (emulatorStarted) return;
+       
+function startGame() {
+    const container = document.getElementById("game-container");
 
-            const status = document.getElementById("status");
-            const container = document.getElementById("game-container");
+    document.getElementById("game-card").style.display = "none";
+    container.style.display = "block";
 
-            document.getElementById("game-card").style.display = "none";
-            document.getElementById("back-button").style.display = "block";
-            container.classList.add("active");
+    // Configurações do Mega Drive
+    window.EJS_player = "#game-container";
+    window.EJS_core = "segaMD";
 
-            status.textContent = "";
+    window.EJS_gameUrl =
+        "https://raw.githubusercontent.com/grupoplanejar2024-coder/kubo-sonic-megadrive/main/sonic1.gen";
 
-            // Configurar antes de carregar o EmulatorJS
-            window.EJS_player = "#game-container";
-            window.EJS_core = "segaMD";
-            window.EJS_gameUrl =
-                "https://raw.githubusercontent.com/grupoplanejar2024-coder/kubo-sonic-megadrive/main/sonic1.gen";
-            window.EJS_pathtodata =
-                "https://www.emulatorjs.com/data/";
-            window.EJS_gameName = "Sonic The Hedgehog";
-            window.EJS_language = "pt-BR";
-            window.EJS_startOnLoaded = true;
-            window.EJS_controlScheme = "segaMD";
+    // Arquivos oficiais do EmulatorJS
+    window.EJS_pathtodata =
+        "https://cdn.emulatorjs.org/stable/data/";
 
-            emulatorStarted = true;
-            status.textContent = "Carregando o Sonic...";
+    // Controles virtuais para celular
+    window.EJS_controlScheme = "segaMD";
+    window.EJS_browserMode = "mobile";
 
-            const script = document.createElement("script");
-            script.src = "https://www.emulatorjs.com/loader.js";
-            script.async = true;
+    // Idioma e aparência
+    window.EJS_language = "pt-BR";
+    window.EJS_gameName = "Sonic The Hedgehog";
+    window.EJS_color = "#1685ff";
+    window.EJS_backgroundColor = "#000000";
+    window.EJS_volume = 0.7;
 
-            script.onerror = function() {
-                status.textContent =
-                    "Não foi possível carregar o emulador. " +
-                    "Verifique sua conexão e tente novamente.";
-                emulatorStarted = false;
-            };
+    // Não configurar anúncios próprios no emulador
+    window.EJS_AdUrl = "";
 
-            document.body.appendChild(script);
-        }
+    // Evitar carregar o emulador duas vezes
+    if (window.kuboEmulatorLoading) return;
+    window.kuboEmulatorLoading = true;
+
+    const script = document.createElement("script");
+    script.src =
+        "https://cdn.emulatorjs.org/stable/data/loader.js";
+    script.async = true;
+
+    script.onerror = function () {
+        window.kuboEmulatorLoading = false;
+        alert(
+            "Não foi possível carregar o emulador. " +
+            "Verifique sua conexão e tente novamente."
+        );
+    };
+
+    document.body.appendChild(script);
+}
 
         function backToMenu() {
             // Recarregar evita deixar o emulador antigo ativo.
