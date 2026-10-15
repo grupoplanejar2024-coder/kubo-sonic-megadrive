@@ -213,130 +213,33 @@ function startGame() {
 
     document.getElementById("game-card").style.display = "none";
     container.style.display = "block";
+    container.innerHTML = "";
 
-    // Configurações do Mega Drive
     window.EJS_player = "#game-container";
     window.EJS_core = "segaMD";
-
     window.EJS_gameUrl =
         "https://raw.githubusercontent.com/grupoplanejar2024-coder/kubo-sonic-megadrive/main/sonic1.gen";
-
-    // Arquivos oficiais do EmulatorJS
     window.EJS_pathtodata =
         "https://cdn.emulatorjs.org/stable/data/";
-
-    // Controles virtuais para celular
-    window.EJS_controlScheme = "segaMD";
-    window.EJS_browserMode = "mobile";
-{
-        type: "dpad",
-        location: "left",
-        left: "50%",
-        right: "50%",
-        joystickInput: false,
-        inputValues: [4, 5, 6, 7]
-    },
-    {
-        type: "button",
-        text: "X",
-        id: "md-x",
-        location: "right",
-        left: 0,
-        top: 0,
-        bold: true,
-        input_value: 1
-    },
-    {
-        type: "button",
-        text: "Y",
-        id: "md-y",
-        location: "right",
-        left: 0,
-        top: 54,
-        bold: true,
-        input_value: 9
-    },
-    {
-        type: "button",
-        text: "Z",
-        id: "md-z",
-        location: "right",
-        left: 0,
-        top: 108,
-        bold: true,
-        input_value: 11
-    },
-    {
-        type: "button",
-        text: "A",
-        id: "md-a",
-        location: "right",
-        left: 62,
-        top: 108,
-        bold: true,
-        input_value: 0
-    },
-    {
-        type: "button",
-        text: "B",
-        id: "md-b",
-        location: "right",
-        left: 62,
-        top: 54,
-        bold: true,
-        input_value: 8
-    },
-    {
-        type: "button",
-        text: "C",
-        id: "md-c",
-        location: "right",
-        left: 62,
-        top: 0,
-        bold: true,
-        input_value: 10
-    },
-    {
-        type: "button",
-        text: "START",
-        id: "md-start",
-        location: "center",
-        left: 0,
-        top: 0,
-        fontSize: 13,
-        bold: true,
-        input_value: 3
-    }
-];
-    // Idioma e aparência
-    window.EJS_language = "pt-BR";
     window.EJS_gameName = "Sonic The Hedgehog";
-    window.EJS_color = "#1685ff";
-    window.EJS_backgroundColor = "#000000";
-    window.EJS_volume = 0.7;
+    window.EJS_language = "pt-BR";
+    window.EJS_startOnLoaded = true;
 
-    // Não configurar anúncios próprios no emulador
-    window.EJS_AdUrl = "";
-
-    // Evitar carregar o emulador duas vezes
-    if (window.kuboEmulatorLoading) return;
-    window.kuboEmulatorLoading = true;
+    const oldLoader = document.getElementById("emulatorjs-loader");
+    if (oldLoader) oldLoader.remove();
 
     const script = document.createElement("script");
-    script.src =
-        "https://cdn.emulatorjs.org/stable/data/loader.js";
+    script.id = "emulatorjs-loader";
+    script.src = window.EJS_pathtodata + "loader.js";
     script.async = true;
 
     script.onerror = function () {
-        window.kuboEmulatorLoading = false;
-        alert(
-            "Não foi possível carregar o emulador. " +
-            "Verifique sua conexão e tente novamente."
-        );
+        alert("Erro ao carregar o EmulatorJS. Verifique a conexão.");
     };
 
     document.body.appendChild(script);
 }
+
 
         function backToMenu() {
             // Recarregar evita deixar o emulador antigo ativo.
